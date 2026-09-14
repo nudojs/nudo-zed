@@ -4,6 +4,9 @@
 language server (`@nudojs/lsp`) as a **secondary** language server for JavaScript and TypeScript
 (alongside `vtsls` / `typescript-language-server`).
 
+Requires [`@nudojs/lsp` ≥ 0.5.0](https://www.npmjs.com/package/@nudojs/lsp) — that release ships the
+`nudo-lsp` bin and defaults to stdio when no transport flag is passed.
+
 ## Install
 
 Once published to the [Zed extensions registry](https://github.com/zed-industries/extensions):
@@ -16,6 +19,18 @@ rustup target add wasm32-wasip2   # once
 ```
 
 In Zed: **Extensions → Install Dev Extension…** → select this repository root.
+
+### Language server
+
+Install `@nudojs/lsp` so the extension can find a server (any one of these):
+
+```bash
+npm i -g @nudojs/lsp                 # puts nudo-lsp on PATH
+# or, project-local:
+npm i @nudojs/lsp                    # node_modules/@nudojs/lsp/dist/server.js
+```
+
+If neither is present, the extension installs the latest package via Zed’s managed npm.
 
 ### Settings
 
@@ -45,10 +60,27 @@ Enable semantic tokens if you want type-aware highlighting:
 ## How the server is found
 
 1. `nudo-lsp` on `PATH` (`npm i -g @nudojs/lsp`)
-2. Project-local `node_modules/@nudojs/lsp/dist/server.js`
+2. Project-local `node_modules/@nudojs/lsp/dist/server.js` (via `node`)
 3. Zed-managed `npm install @nudojs/lsp`, resolved with `require.resolve`
 
+All three launch paths pass `--stdio` explicitly.
+
 Binary override (skip discovery):
+
+```json
+{
+  "lsp": {
+    "nudo": {
+      "binary": {
+        "path": "nudo-lsp",
+        "arguments": []
+      }
+    }
+  }
+}
+```
+
+Or point at a project install:
 
 ```json
 {
@@ -77,7 +109,7 @@ cargo build --target wasm32-wasip2 --release
 Zed installs extensions as git submodules under
 [zed-industries/extensions](https://github.com/zed-industries/extensions).
 
-1. Push this repo to GitHub (e.g. `nudojs/nudo-zed`).
+1. Push this repo to GitHub (`nudojs/nudo-zed`).
 2. Open a PR against `zed-industries/extensions`:
 
    ```bash
@@ -90,7 +122,7 @@ Zed installs extensions as git submodules under
    ```toml
    [nudo-lsp]
    submodule = "extensions/nudo-lsp"
-   version = "0.1.0"
+   version = "0.1.1"
    ```
 
 4. Run `pnpm sort-extensions`, then open the PR.
