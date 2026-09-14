@@ -18,7 +18,7 @@ impl NudoExtension {
     fn node_command(node: &str, server_path: String, worktree: &Worktree) -> Command {
         Command {
             command: node.to_string(),
-            args: vec![server_path],
+            args: vec![server_path, "--stdio".to_string()],
             env: Self::shell_env(worktree),
         }
     }
@@ -63,7 +63,7 @@ impl NudoExtension {
         if let Some(bin) = worktree.which(BIN_NAME) {
             return Ok(Command {
                 command: bin,
-                args: Vec::new(),
+                args: vec!["--stdio".to_string()],
                 env: Self::shell_env(worktree),
             });
         }
