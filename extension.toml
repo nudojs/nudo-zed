@@ -1,0 +1,11 @@
+id = "nudo"
+name = "Nudo"
+version = "0.1.0"
+schema_version = 1
+authors = ["wmzy"]
+description = "Nudo type inference for JavaScript and TypeScript"
+repository = "https://github.com/nudojs/nudo-zed"
+
+[language_servers.nudo]
+name = "Nudo"
+languages = ["JavaScript", "TypeScript", "JavaScript React", "TypeScript React"]
