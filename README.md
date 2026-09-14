@@ -7,7 +7,7 @@ language server (`@nudojs/lsp`) as a **secondary** language server for JavaScrip
 ## Install
 
 Once published to the [Zed extensions registry](https://github.com/zed-industries/extensions):
-**Extensions → search “Nudo” → Install**.
+**Extensions → search “nudo-lsp” → Install**.
 
 ### Dev install (from this repo)
 
@@ -81,11 +81,21 @@ Zed installs extensions as git submodules under
 2. Open a PR against `zed-industries/extensions`:
 
    ```bash
-   git submodule add https://github.com/nudojs/nudo-zed extensions/nudo
-   git commit -m "Add nudo extension"
+   git submodule add https://github.com/nudojs/nudo-zed extensions/nudo-lsp
+   git commit -m "Add nudo-lsp extension"
    ```
 
-3. Bump `version` in `extension.toml` and push when releasing updates.
+3. Add to `extensions.toml`:
+
+   ```toml
+   [nudo-lsp]
+   submodule = "extensions/nudo-lsp"
+   version = "0.1.0"
+   ```
+
+4. Run `pnpm sort-extensions`, then open the PR.
+
+5. Bump `version` in `extension.toml` and push when releasing updates.
 
 ## License
 
