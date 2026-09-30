@@ -22,15 +22,9 @@ In Zed: **Extensions → Install Dev Extension…** → select this repository r
 
 ### Language server
 
-Install `@nudojs/lsp` so the extension can find a server (any one of these):
-
-```bash
-npm i -g @nudojs/lsp                 # puts nudo-lsp on PATH
-# or, project-local:
-npm i @nudojs/lsp                    # node_modules/@nudojs/lsp/dist/server.js
-```
-
-If neither is present, the extension installs the latest package via Zed’s managed npm.
+The extension installs the latest `@nudojs/lsp` via Zed’s managed npm
+(`npm_install_package`) and launches `node_modules/@nudojs/lsp/dist/server.js --stdio`.
+No manual install is required.
 
 ### Settings
 
@@ -57,15 +51,36 @@ Enable semantic tokens if you want type-aware highlighting:
 }
 ```
 
+### LSP settings passthrough
+
+Like other Zed language-server extensions (and the VS Code client settings face),
+`lsp.nudo.settings` / `lsp.nudo.initialization_options` are forwarded to the server:
+
+```json
+{
+  "lsp": {
+    "nudo": {
+      "settings": {},
+      "initialization_options": {}
+    }
+  }
+}
+```
+
+Project analysis config still lives in `package.json#nudo` (or `nudo.json`) —
+`analysis.mode` / `include` / `exclude` are project config, not editor config.
+
 ## How the server is found
 
-1. `nudo-lsp` on `PATH` (`npm i -g @nudojs/lsp`)
-2. Project-local `node_modules/@nudojs/lsp/dist/server.js` (via `node`)
-3. Zed-managed `npm install @nudojs/lsp`, resolved with `require.resolve`
+The extension resolves the server the same way as other Zed language-server
+extensions (e.g. Astro): `npm_install_package("@nudojs/lsp")` into the
+extension work directory, then run
 
-All three launch paths pass `--stdio` explicitly.
+```
+<node_binary_path>/node_modules/@nudojs/lsp/dist/server.js --stdio
+```
 
-Binary override (skip discovery):
+Binary override (skip the managed install):
 
 ```json
 {
@@ -122,7 +137,7 @@ Zed installs extensions as git submodules under
    ```toml
    [nudo-lsp]
    submodule = "extensions/nudo-lsp"
-   version = "0.1.1"
+   version = "0.1.2"
    ```
 
 4. Run `pnpm sort-extensions`, then open the PR.
