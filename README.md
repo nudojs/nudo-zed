@@ -36,12 +36,32 @@ No manual install is required.
     },
     "TypeScript": {
       "language_servers": ["vtsls", "nudo", "..."]
+    },
+    "TSX": {
+      "language_servers": ["vtsls", "nudo", "..."]
     }
   },
   "code_lens": "on",
   "inlay_hints": { "enabled": true }
 }
 ```
+
+Notes:
+
+- Zed's language names are `JavaScript` (`.js`/`.mjs`/`.jsx`), `TypeScript` (`.ts`),
+  `TSX` (`.tsx`) — there are no `JavaScript React` / `TypeScript React` languages in Zed.
+- `"..."` keeps every other registered server enabled, so once the extension is
+  installed Zed also auto-includes `nudo` by default; listing it explicitly makes
+  it the *primary* server, which is usually not what you want — keep `vtsls` (or
+  `typescript-language-server`) primary and let `nudo` run as the secondary.
+  Hover, diagnostics, inlay hints and code lenses from `nudo` are merged alongside
+  the primary server's results.
+- `nudo` analyzes `.js` / `.mjs` / `.ts` only (`isNudoTargetPath`); `.jsx` / `.tsx` /
+  `.cjs` / `.d.ts` and sidecar contract modules are not inference targets.
+- By default only files containing `@nudo:` directives are analyzed
+  (`analysis.mode: "directives"`). To analyze every export, set
+  `"nudo": { "analysis": { "mode": "exports" } }` in `package.json#nudo`
+  (or `nudo.json`).
 
 Enable semantic tokens if you want type-aware highlighting:
 
@@ -69,6 +89,23 @@ Like other Zed language-server extensions (and the VS Code client settings face)
 
 Project analysis config still lives in `package.json#nudo` (or `nudo.json`) —
 `analysis.mode` / `include` / `exclude` are project config, not editor config.
+
+### Observation selector: contract vs cases
+
+The lens row is an observation selector — **contract is one option alongside
+each case**, exactly one active at a time (`●` active / `○` inactive):
+
+- `● contract / hw|gen|imp` (handwritten / generated / implicit tier) — the
+  default. Click to switch back to the contract observation
+  (`nudo.selectContract`); clicking with no active case is an idempotent no-op.
+- `○ case "name"` — click to select (`nudo.selectCase`); the contract option
+  flips to `○`.
+- `⚡ persist interface` / `⚡ draft interface` actions and the synthesized
+  `call@L6 (5, 3) => 2` / `entry@` observation lenses stay visible regardless.
+
+Hover and Abs type inlays (param constraints, return term/pred) always show —
+they are the inference surface, not the observation vocabulary. The inlay tier
+projection (for clients without CodeLens UI) mirrors the active state.
 
 ## How the server is found
 
@@ -137,7 +174,7 @@ Zed installs extensions as git submodules under
    ```toml
    [nudo-lsp]
    submodule = "extensions/nudo-lsp"
-   version = "0.1.2"
+   version = "0.1.3"
    ```
 
 4. Run `pnpm sort-extensions`, then open the PR.

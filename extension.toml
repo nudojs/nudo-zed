@@ -1,6 +1,6 @@
 id = "nudo-lsp"
 name = "Nudo"
-version = "0.1.2"
+version = "0.1.3"
 schema_version = 1
 authors = ["wmzy"]
 description = "Nudo type inference for JavaScript and TypeScript"
@@ -8,4 +8,7 @@ repository = "https://github.com/nudojs/nudo-zed"
 
 [language_servers.nudo]
 name = "Nudo"
-languages = ["JavaScript", "TypeScript", "JavaScript React", "TypeScript React"]
+# Zed language names (must match Zed's language `name` exactly):
+# .js/.mjs/.jsx → "JavaScript", .ts → "TypeScript", .tsx → "TSX".
+# There are no "JavaScript React"/"TypeScript React" languages in Zed.
+languages = ["JavaScript", "TypeScript", "TSX"]
