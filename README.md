@@ -100,7 +100,7 @@ each case**, exactly one active at a time (`●` active / `○` inactive):
   (`nudo.selectContract`); clicking with no active case is an idempotent no-op.
 - `○ case "name"` — click to select (`nudo.selectCase`); the contract option
   flips to `○`.
-- `⚡ persist interface` / `⚡ draft interface` actions and the synthesized
+- `⚡ persist contract` / `⚡ draft contract` actions and the synthesized
   `call@L6 (5, 3) => 2` / `entry@` observation lenses stay visible regardless.
 
 Hover and Abs type inlays (param constraints, return term/pred) always show —
